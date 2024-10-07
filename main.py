@@ -1,72 +1,51 @@
 import os
 import shutil
-from paths import main_disk, backup, ignor
-
-disk_path = main_disk
-flash_path = backup
-seen_files = {}
-
-for path, dirs, files in os.walk(disk_path):
-    for file_name in files:
-        if path.split("\\")[-1] in ignor:
-            continue
-        way_to = os.path.join(path, file_name)
-        seen_files[way_to] = file_name
+from paths import main_disk, backup
 
 
-def split_with_dif_ch(s, leave_last = True):
-    prev = 1
-    sp = {'/', '\\'}
+disk = main_disk
+flash = backup
 
-    result = []
+n = len(disk)
+m = len(flash)
+
+dirs = set()
+files = set()
+
+for path, dirs_on_disk, files_on_disk in os.walk(disk):
+
+    for directory in dirs_on_disk:
+        dirs.add(path[n:] + '/' + directory)
+
+    for file in files_on_disk:
+        files.add(path[n:] + '/' + file)
+
+
+for path, dirs_on_flash, files_on_flash in os.walk(flash):
     
-    for i in range(len(s)):
-        if s[i] in sp:
-            result.append(s[prev-1:i])
-            prev = i+1
-    if len(s[prev:])>0:
-        result.append(s[prev-1:])
-    
-    if leave_last == False:
-        return result[:-1]
-    
-    return result
+    for directory in dirs_on_flash:
+        new_path = path[m:] + '/' + directory
 
-removed_from_flash = 0
-for path, dirs, files in os.walk(flash_path):
-    for file_name in files:
-        if path.split('\\')[-1] in ignor:
-            continue
+        if new_path in dirs:
+            dirs.remove(new_path)
+        else:
+            shutil.rmtree(path + '/' + directory)
+    
+    for file in files_on_flash:
+
+        new_path = path[m:] + '/' + file
         
-        way_to = os.path.join(path, file_name)
+        if new_path in files:
+            files.remove(new_path)
+        elif os.path.isfile(path + '/' + file):
+            os.remove(path + '/' + file)
 
-        if file_name in seen_files.values():
-            del seen_files[way_to]
-        else: 
-            os.remove(way_to)
-            removed_from_flash += 1
-        
-
-
-flash = flash_path
-flash_p_list = split_with_dif_ch(flash)
-
-added_files = 0
-for path in seen_files.keys():
-    path_list = split_with_dif_ch(path, False)
-
-    new_path = ''.join(flash_p_list + path_list[len(flash_p_list):])
-    
-
+for directory in dirs:
+    new_path = flash + directory
     if not os.path.isdir(new_path):
         os.makedirs(new_path)
 
-    shutil.copy(path, new_path)
-    added_files += 1
-
-# По итогу, помимо наличия одинаковых файлов как на диске, так и на флешке, 
-# можно вывести количество удалённых и новых файлов
-
-
-print('Удалённых файлов было: ', removed_from_flash)
-print('На флешку добавили ', added_files, ' файлов')
+for file in files:
+    old_path = disk + file
+    new_path = flash + file
+    shutil.copy(old_path, new_path)
