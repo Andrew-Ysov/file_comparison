@@ -45,7 +45,7 @@ for directory in DIRS:
         os.makedirs(new_path)
 
 
-for file in files:
+for file in FILES:
     old_path = DISK + file
     new_path = FLASH + file
     shutil.copy(old_path, new_path)
