@@ -1,4 +1,4 @@
-'''Variables for path to disk and it's backup'''
+'''Variables for path to disk and it's backup.'''
 
 def main():
   '''Specify your own paths'''
