@@ -15,7 +15,7 @@ files = set()
 
 
 def main(dirs, files, m, n, DISK, FLASH):
-    # Собирает пути до всех файлов и папок
+    '''Collect paths to files and directories'''
     for path, dirs_on_disk, files_on_disk in os.walk(DISK):
         for directory in dirs_on_disk:
             dirs.add(path[n:] + '/' + directory)
@@ -23,7 +23,7 @@ def main(dirs, files, m, n, DISK, FLASH):
         for file in files_on_disk:
             files.add(path[n:] + '/' + file)
 
-    # Оставляет в dirs, files только уникальные для DISK пути, которых нет в FLASH
+    # keep only unique paths in DISK
     for path, dirs_on_flash, files_on_flash in os.walk(FLASH):
         for directory in dirs_on_flash:
             new_path = path[m:] + '/' + directory

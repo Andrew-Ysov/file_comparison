@@ -1,6 +1,7 @@
-''' Переменные, отвечающие за пути до главного диска (MAIN_DISK) и для бэкапа (BACKUP)'''
+'''Variables for path to disk and it's backup'''
 
 def main():
+  '''Specify your own paths'''
   MAIN_DISK = 'D:/Главная папка'
   BACKUP = 'E:/Главная папка'
 
