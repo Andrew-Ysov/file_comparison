@@ -1,7 +1,7 @@
-'''Variables for path to disk and it's backup.'''
+"""Variables for path to disk and it's backup."""
 
 def main():
-  '''Specify your own paths'''
+  """Specify your own paths."""
   MAIN_DISK = 'D:/Главная папка'
   BACKUP = 'E:/Главная папка'
 

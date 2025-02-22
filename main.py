@@ -15,7 +15,7 @@ files = set()
 
 
 def main(dirs, files, m, n, DISK, FLASH):
-    '''Collect paths to files and directories.'''
+    """Collect paths to files and directories."""
     for path, dirs_on_disk, files_on_disk in os.walk(DISK):
         for directory in dirs_on_disk:
             dirs.add(path[n:] + '/' + directory)
